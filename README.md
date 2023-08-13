@@ -1,11 +1,10 @@
-oclif-hello-world
+Lumbermill
 =================
 
-oclif example Hello World CLI
+Ezpz management of git worktrees
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![GitHub license](https://img.shields.io/github/license/oclif/hello-world)](https://github.com/oclif/hello-world/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/rabrennie/lumbermill)](https://github.com/rabrennie/lumbermill/blob/main/LICENSE)
 
 <!-- toc -->
 * [Usage](#usage)
