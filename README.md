@@ -14,11 +14,11 @@ oclif example Hello World CLI
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g lumbermill
+$ npm install -g @rabrennie/lumbermill
 $ lm COMMAND
 running command...
 $ lm (--version)
-lumbermill/0.0.0 darwin-arm64 node-v18.16.0
+@rabrennie/lumbermill/0.1.0 darwin-arm64 node-v18.16.0
 $ lm --help [COMMAND]
 USAGE
   $ lm COMMAND
@@ -27,324 +27,188 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`lm hello PERSON`](#lm-hello-person)
-* [`lm hello world`](#lm-hello-world)
-* [`lm help [COMMANDS]`](#lm-help-commands)
-* [`lm plugins`](#lm-plugins)
-* [`lm plugins:install PLUGIN...`](#lm-pluginsinstall-plugin)
-* [`lm plugins:inspect PLUGIN...`](#lm-pluginsinspect-plugin)
-* [`lm plugins:install PLUGIN...`](#lm-pluginsinstall-plugin-1)
-* [`lm plugins:link PLUGIN`](#lm-pluginslink-plugin)
-* [`lm plugins:uninstall PLUGIN...`](#lm-pluginsuninstall-plugin)
-* [`lm plugins:uninstall PLUGIN...`](#lm-pluginsuninstall-plugin-1)
-* [`lm plugins:uninstall PLUGIN...`](#lm-pluginsuninstall-plugin-2)
-* [`lm plugins update`](#lm-plugins-update)
+* [`lm alias delete ALIAS`](#lm-alias-delete-alias)
+* [`lm alias list`](#lm-alias-list)
+* [`lm alias set ALIAS EXPANSION`](#lm-alias-set-alias-expansion)
+* [`lm clone REPO [DIRECTORY]`](#lm-clone-repo-directory)
+* [`lm create BRANCH`](#lm-create-branch)
+* [`lm remove BRANCH`](#lm-remove-branch)
+* [`lm rm BRANCH`](#lm-rm-branch)
+* [`lm run SCRIPT`](#lm-run-script)
 
-## `lm hello PERSON`
+## `lm alias delete ALIAS`
 
-Say hello
+deletes an alias
 
 ```
 USAGE
-  $ lm hello PERSON -f <value>
+  $ lm alias delete ALIAS
 
 ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
+  ALIAS  alias to delete
 
 DESCRIPTION
-  Say hello
+  deletes an alias
 
 EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ lm alias delete
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/rabrennie/lumbermill/lumbermill/blob/v0.0.0/dist/commands/hello/index.ts)_
+_See code: [dist/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/alias/delete.ts)_
 
-## `lm hello world`
+## `lm alias list`
 
-Say hello world
+lists all defined aliases
 
 ```
 USAGE
-  $ lm hello world
+  $ lm alias list
 
 DESCRIPTION
-  Say hello world
+  lists all defined aliases
 
 EXAMPLES
-  $ lm hello world
-  hello world! (./src/commands/hello/world.ts)
+  $ lm alias list
 ```
 
-_See code: [dist/commands/hello/world.ts](https://github.com/rabrennie/lumbermill/lumbermill/blob/v0.0.0/dist/commands/hello/world.ts)_
+_See code: [dist/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/alias/list.ts)_
 
-## `lm help [COMMANDS]`
+## `lm alias set ALIAS EXPANSION`
 
-Display help for lm.
+defines a new alias that will expand to a command
 
 ```
 USAGE
-  $ lm help [COMMANDS] [-n]
+  $ lm alias set ALIAS EXPANSION
 
 ARGUMENTS
-  COMMANDS  Command to show help for.
-
-FLAGS
-  -n, --nested-commands  Include all nested commands in the output.
+  ALIAS      alias to set
+  EXPANSION  expansion to set
 
 DESCRIPTION
-  Display help for lm.
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.16/src/commands/help.ts)_
-
-## `lm plugins`
-
-List installed plugins.
-
-```
-USAGE
-  $ lm plugins [--json] [--core]
-
-FLAGS
-  --core  Show core plugins.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  List installed plugins.
+  defines a new alias that will expand to a command
 
 EXAMPLES
-  $ lm plugins
+  $ lm alias set
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/index.ts)_
+_See code: [dist/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/alias/set.ts)_
 
-## `lm plugins:install PLUGIN...`
+## `lm clone REPO [DIRECTORY]`
 
-Installs a plugin into the CLI.
+Clones a repo and configures it for lumbermill
 
 ```
 USAGE
-  $ lm plugins:install PLUGIN...
+  $ lm clone REPO [DIRECTORY]
 
 ARGUMENTS
-  PLUGIN  Plugin to install.
-
-FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
+  REPO       repo to clone
+  DIRECTORY  target directory
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
+  Clones a repo and configures it for lumbermill
 
-  Installation of a user-installed plugin will override a core plugin.
+EXAMPLES
+  $ lm clone
+```
 
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
+_See code: [dist/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/clone.ts)_
 
+## `lm create BRANCH`
+
+Creates a new worktree for a lumbermill managed repo
+
+```
+USAGE
+  $ lm create BRANCH [--repo <value>]
+
+ARGUMENTS
+  BRANCH  branch name to create
+
+FLAGS
+  --repo=<value>  repo to use, if not specified, will use repo associated with the current directory
+
+DESCRIPTION
+  Creates a new worktree for a lumbermill managed repo
+
+EXAMPLES
+  $ lm create
+```
+
+_See code: [dist/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/create.ts)_
+
+## `lm remove BRANCH`
+
+Removes a worktree from a lumbermill managed repo
+
+```
+USAGE
+  $ lm remove BRANCH [--repo <value>]
+
+ARGUMENTS
+  BRANCH  branch name to remove
+
+FLAGS
+  --repo=<value>  repo to use, if not specified, will use repo associated with the current directory
+
+DESCRIPTION
+  Removes a worktree from a lumbermill managed repo
 
 ALIASES
-  $ lm plugins add
+  $ lm rm
 
 EXAMPLES
-  $ lm plugins:install myplugin 
-
-  $ lm plugins:install https://github.com/someuser/someplugin
-
-  $ lm plugins:install someuser/someplugin
+  $ lm remove
 ```
 
-## `lm plugins:inspect PLUGIN...`
+_See code: [dist/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/remove.ts)_
 
-Displays installation properties of a plugin.
+## `lm rm BRANCH`
+
+Removes a worktree from a lumbermill managed repo
 
 ```
 USAGE
-  $ lm plugins:inspect PLUGIN...
+  $ lm rm BRANCH [--repo <value>]
 
 ARGUMENTS
-  PLUGIN  [default: .] Plugin to inspect.
+  BRANCH  branch name to remove
 
 FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-GLOBAL FLAGS
-  --json  Format output as json.
+  --repo=<value>  repo to use, if not specified, will use repo associated with the current directory
 
 DESCRIPTION
-  Displays installation properties of a plugin.
+  Removes a worktree from a lumbermill managed repo
+
+ALIASES
+  $ lm rm
 
 EXAMPLES
-  $ lm plugins:inspect myplugin
+  $ lm rm
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/inspect.ts)_
+## `lm run SCRIPT`
 
-## `lm plugins:install PLUGIN...`
-
-Installs a plugin into the CLI.
+Runs a script in a worktree
 
 ```
 USAGE
-  $ lm plugins:install PLUGIN...
+  $ lm run SCRIPT --branch <value> [--repo <value>]
 
 ARGUMENTS
-  PLUGIN  Plugin to install.
+  SCRIPT  file to read
 
 FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
+  --branch=<value>  (required) branch name to run script in
+  --repo=<value>    repo to use, if not specified, will use repo associated with the current directory
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-
-ALIASES
-  $ lm plugins add
+  Runs a script in a worktree
 
 EXAMPLES
-  $ lm plugins:install myplugin 
-
-  $ lm plugins:install https://github.com/someuser/someplugin
-
-  $ lm plugins:install someuser/someplugin
+  $ lm run
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/install.ts)_
-
-## `lm plugins:link PLUGIN`
-
-Links a plugin into the CLI for development.
-
-```
-USAGE
-  $ lm plugins:link PLUGIN
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-
-EXAMPLES
-  $ lm plugins:link myplugin
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/link.ts)_
-
-## `lm plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lm plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lm plugins unlink
-  $ lm plugins remove
-```
-
-## `lm plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lm plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lm plugins unlink
-  $ lm plugins remove
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/uninstall.ts)_
-
-## `lm plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lm plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lm plugins unlink
-  $ lm plugins remove
-```
-
-## `lm plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ lm plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.2.5/src/commands/plugins/update.ts)_
+_See code: [dist/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.1.0/dist/commands/run.ts)_
 <!-- commandsstop -->

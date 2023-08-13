@@ -1,6 +1,6 @@
 {
   "name": "@rabrennie/lumbermill",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Ezpz management of git worktrees",
   "author": "rabrennie",
   "bin": {
