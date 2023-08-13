@@ -3,6 +3,7 @@ import BaseCommand from './base-command';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { normalizePath, pathExists } from './lib/fs';
+import { getUserConfig } from './lib/config';
 
 interface RepoConfig {
   repo: string;
@@ -24,7 +25,7 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     );
 
     let repo = flags.repo;
-    const userConfig = await this.getUserConfig();
+    const userConfig = await getUserConfig(this.config.configDir);
 
     if (!flags.repo) {
       const repoFolder = await this.getRootGitFolder();

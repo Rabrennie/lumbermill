@@ -2,6 +2,7 @@ import { Args, ux } from '@oclif/core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import BaseCommand from '../base-command';
+import { getUserConfig, updateUserConfig } from '../lib/config';
 import { normalizePath, pathExists } from '../lib/fs';
 
 export default class Clone extends BaseCommand {
@@ -24,7 +25,7 @@ export default class Clone extends BaseCommand {
 
     ux.action.start('Cloning repo');
 
-    const userConfig = await this.getUserConfig();
+    const userConfig = await getUserConfig(this.config.configDir);
 
     // check if the target directory exists and throw an error if it does
     const folderName = args.repo.split('/').pop()?.replace('.git', '');
@@ -94,7 +95,7 @@ export default class Clone extends BaseCommand {
     );
 
     userConfig.repos[repoName] = targetDir;
-    await this.updateUserConfig(userConfig);
+    updateUserConfig(this.config.configDir, userConfig);
 
     ux.action.stop();
     ux.info(`Cloned ${args.repo} to ${targetDir}`);
