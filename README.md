@@ -3,8 +3,8 @@ Lumbermill
 
 Ezpz management of git worktrees
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![GitHub license](https://img.shields.io/github/license/rabrennie/lumbermill)](https://github.com/rabrennie/lumbermill/blob/main/LICENSE)
+![lumbermill](https://github.com/Rabrennie/lumbermill/assets/9087372/fc48018c-b135-4212-bdea-ee6aaf53c0df)
+
 
 <!-- toc -->
 * [Usage](#usage)
