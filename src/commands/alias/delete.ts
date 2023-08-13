@@ -2,7 +2,7 @@ import { Args, Command, ux } from '@oclif/core';
 import { getUserConfig, updateUserConfig } from '../../lib/config';
 
 export default class AliasDelete extends Command {
-  static description = 'describe the command here';
+  static description = 'deletes an alias';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
