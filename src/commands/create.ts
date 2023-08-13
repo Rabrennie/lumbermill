@@ -3,7 +3,7 @@ import BaseWorkTreeCommand from '../base-worktree-command';
 import * as path from 'node:path';
 
 export default class Create extends BaseWorkTreeCommand {
-  static description = 'describe the command here';
+  static description = 'Creates a new worktree for a lumbermill managed repo';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 

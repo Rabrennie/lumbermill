@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import * as path from 'node:path';
 
 export default class Run extends BaseWorkTreeCommand {
-  static description = 'describe the command here';
+  static description = 'Runs a script in a worktree';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 

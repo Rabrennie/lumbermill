@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import BaseWorkTreeCommand from '../base-worktree-command';
 
 export default class Remove extends BaseWorkTreeCommand {
-  static description = 'describe the command here';
+  static description = 'Removes a worktree from a lumbermill managed repo';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 

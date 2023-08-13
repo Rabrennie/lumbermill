@@ -14,7 +14,7 @@ interface RepoConfig {
 export default class BaseWorkTreeCommand extends BaseCommand {
   static baseFlags = {
     repo: Flags.string({
-      description: 'repo to use',
+      description: 'repo to use, if not specified, will use repo associated with the current directory',
     }),
   };
 

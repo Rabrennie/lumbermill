@@ -1,11 +1,11 @@
 import { Args, ux } from '@oclif/core';
 import * as fs from 'node:fs';
-import path = require('node:path');
+import * as path from 'node:path';
 import BaseCommand from '../base-command';
 import { normalizePath, pathExists } from '../lib/fs';
 
 export default class Clone extends BaseCommand {
-  static description = 'describe the command here';
+  static description = 'Clones a repo and configures it for lumbermill';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
@@ -87,7 +87,10 @@ export default class Clone extends BaseCommand {
       this.error(error.toString());
     }
 
-    await fs.promises.writeFile(path.join(targetDir, '.git'), 'gitdir: ./main/.git');
+    await fs.promises.writeFile(
+      path.join(targetDir, '.git'),
+      'gitdir: ./main/.git',
+    );
 
     userConfig.repos[repoName] = targetDir;
     await this.updateUserConfig(userConfig);
