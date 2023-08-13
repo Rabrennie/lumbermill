@@ -8,7 +8,6 @@ const hook: Hook<'init'> = async function () {
   const userConfigPath = path.join(this.config.configDir, 'config.json');
   const fileExists = await fs.promises.stat(userConfigPath).catch(() => false);
   if (!fileExists) {
-    console.log('here');
     ux.action.start(
       'Creating config file as lumbermill is being run for the first time',
     );
@@ -19,6 +18,7 @@ const hook: Hook<'init'> = async function () {
       JSON.stringify(
         {
           repos: {},
+          aliases: {},
         },
         null,
         2,

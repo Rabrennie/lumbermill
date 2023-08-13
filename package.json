@@ -51,7 +51,8 @@
       "init": [
         "./dist/hooks/init/check-git-command",
         "./dist/hooks/init/check-first-run"
-      ]
+      ],
+      "command_not_found": "./dist/hooks/command_not_found/run-alias-command"
     }
   },
   "scripts": {
