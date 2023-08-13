@@ -23,23 +23,48 @@ Cloned git@github.com:Rabrennie/lumbermill.git to /development/lumbermill
 $ lm create user/ticket-123/testing --repo lumbermill
 Created worktree for user/ticket-123/testing in /development/lumbermill/user-ticket-123-testing
 Creating worktree... done
+...
+```
 
-$ cat lumbermill/.lumbermill/config.json
-{
-  "repo": "git@github.com:Rabrennie/lumbermill.git",
-  "directory": "/Users/rab/development/lumbermill",
-  "defaultBranch": "main",
-  "scripts": {}
-}
+# Config Files
 
-$ cat ~/.config/lumbermill/config.json
+## Main Config
+After running the `lm` command it will create a config file in `~/.config/lumbermill/config.json`.
+This file keeps track of the repos and aliases managed by Lumbermill using the following format:
+
+```json
 {
   "repos": {
     "lumbermill": "/Users/rab/development/lumbermill"
   },
   "aliases": {}
 }
-...
+```
+
+# Repo Config
+After cloning a repo with [`lm clone REPO [DIRECTORY]`](#lm-clone-repo-directory) it will create a `.lumbermill` folder
+in the repos directory with a `config.json` file
+
+```json
+{
+  "repo": "git@github.com:Rabrennie/lumbermill.git",
+  "directory": "/development/lumbermill",
+  "defaultBranch": "main",
+  "scripts": {
+    "my-cool-script": "echo \"I am running in $(pwd)\""
+  }
+}
+```
+
+The `scripts` property can be used to create helper scripts that will be run in the default shell when using [`lm run SCRIPT`](#lm-run-script)
+
+```sh-session
+$ lm run my-cool-script --repo lumbermill --branch main
+I am running in /Users/rab/development/lumbermill/main
+
+
+$ lm run my-cool-script --repo lumbermill --branch user/ticket-123/testing
+I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 ```
 
 # Commands
