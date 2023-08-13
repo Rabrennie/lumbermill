@@ -62,7 +62,6 @@ The `scripts` property can be used to create helper scripts that will be run in 
 $ lm run my-cool-script --repo lumbermill --branch main
 I am running in /Users/rab/development/lumbermill/main
 
-
 $ lm run my-cool-script --repo lumbermill --branch user/ticket-123/testing
 I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 ```
