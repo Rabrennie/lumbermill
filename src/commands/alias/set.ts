@@ -3,7 +3,7 @@ import BaseCommand from '../../base-command';
 import { getUserConfig, updateUserConfig } from '../../lib/config';
 
 export default class AliasSet extends BaseCommand {
-  static description = 'describe the command here';
+  static description = 'defines a new alias that will expand to a command';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
