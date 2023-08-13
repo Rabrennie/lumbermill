@@ -32,8 +32,9 @@ export default class Clone extends BaseCommand {
       this.error('Invalid repo name.');
     }
 
-    const repoName = args.directory ?? folderName;
-    const targetDir = normalizePath(path.join(process.cwd(), repoName));
+    const directory = args.directory ?? folderName;
+    const repoName = path.basename(directory);
+    const targetDir = normalizePath(path.join(process.cwd(), directory));
 
     if (
       userConfig.repos[repoName] ||
