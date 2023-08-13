@@ -5,25 +5,43 @@ Ezpz management of git worktrees
 
 ![lumbermill](https://github.com/Rabrennie/lumbermill/assets/9087372/fc48018c-b135-4212-bdea-ee6aaf53c0df)
 
-
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
-<!-- usage -->
 ```sh-session
 $ npm install -g @rabrennie/lumbermill
-$ lm COMMAND
-running command...
-$ lm (--version)
-@rabrennie/lumbermill/0.1.0 darwin-arm64 node-v18.16.0
-$ lm --help [COMMAND]
-USAGE
-  $ lm COMMAND
+
+$ lm clone git@github.com:Rabrennie/lumbermill.git
+Creating config file as lumbermill is being run for the first time... done
+Cloning into 'main'...
+
+Cloning repo... done
+Cloned git@github.com:Rabrennie/lumbermill.git to /development/lumbermill
+
+$ lm create user/ticket-123/testing --repo lumbermill
+Created worktree for user/ticket-123/testing in /development/lumbermill/user-ticket-123-testing
+Creating worktree... done
+
+$ cat lumbermill/.lumbermill/config.json
+{
+  "repo": "git@github.com:Rabrennie/lumbermill.git",
+  "directory": "/Users/rab/development/lumbermill",
+  "defaultBranch": "main",
+  "scripts": {}
+}
+
+$ cat ~/.config/lumbermill/config.json
+{
+  "repos": {
+    "lumbermill": "/Users/rab/development/lumbermill"
+  },
+  "aliases": {}
+}
 ...
 ```
-<!-- usagestop -->
+
 # Commands
 <!-- commands -->
 * [`lm alias delete ALIAS`](#lm-alias-delete-alias)
