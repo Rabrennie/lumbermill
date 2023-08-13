@@ -1,6 +1,7 @@
 import { Args, ux } from '@oclif/core';
 import { spawn } from 'node:child_process';
 import BaseWorkTreeCommand from '../base-worktree-command';
+import { getSafeFolderName } from '../lib/fs';
 
 export default class Remove extends BaseWorkTreeCommand {
   static description = 'Removes a worktree from a lumbermill managed repo';
@@ -21,7 +22,7 @@ export default class Remove extends BaseWorkTreeCommand {
 
     const repo = await this.getRepoFolder();
 
-    const folder = this.getSafeFolderName(args.branch);
+    const folder = getSafeFolderName(args.branch);
 
     ux.action.start(`Removing worktree ${args.branch}`);
     await new Promise((resolve) => {

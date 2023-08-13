@@ -3,7 +3,7 @@ Lumbermill
 
 Ezpz management of git worktrees
 
-![lumbermill](https://github.com/Rabrennie/lumbermill/assets/9087372/fc48018c-b135-4212-bdea-ee6aaf53c0df)
+![lumbermill](./docs/images/lumbermill.gif)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -45,18 +45,23 @@ This file keeps track of the repos and aliases managed by Lumbermill using the f
 After cloning a repo with [`lm clone REPO [DIRECTORY]`](#lm-clone-repo-directory) it will create a `.lumbermill` folder
 in the repos directory with a `config.json` file
 
+`.lumbermill/config.json`
+
 ```json
 {
   "repo": "git@github.com:Rabrennie/lumbermill.git",
   "directory": "/development/lumbermill",
   "defaultBranch": "main",
-  "scripts": {
-    "my-cool-script": "echo \"I am running in $(pwd)\""
-  }
 }
 ```
 
-The `scripts` property can be used to create helper scripts that will be run in the default shell when using [`lm run SCRIPT`](#lm-run-script)
+It will also create a `scripts` directory where we can store custom scripts
+
+`.lumbermill/scripts/my-cool-script`
+
+```bash
+echo "I am running in $(pwd)"
+```
 
 ```sh-session
 $ lm run my-cool-script --repo lumbermill --branch main

@@ -9,13 +9,13 @@ interface RepoConfig {
   repo: string;
   directory: string;
   defaultBranch: string;
-  scripts: Record<string, string>;
 }
 
 export default class BaseWorkTreeCommand extends BaseCommand {
   static baseFlags = {
     repo: Flags.string({
-      description: 'repo to use, if not specified, will use repo associated with the current directory',
+      description:
+        'repo to use, if not specified, will use repo associated with the current directory',
     }),
   };
 
@@ -45,6 +45,11 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     return userConfig.repos[repo];
   }
 
+  protected async getScriptsFolder(): Promise<string> {
+    const repo = await this.getRepoFolder();
+    return path.join(repo, '.lumbermill', 'scripts');
+  }
+
   protected async getRepoConfig(): Promise<RepoConfig> {
     const repo = await this.getRepoFolder();
     const repoConfig = await fs.promises.readFile(
@@ -52,10 +57,6 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     );
 
     return JSON.parse(repoConfig.toString());
-  }
-
-  protected getSafeFolderName(name: string): string {
-    return name.replace(/[^\w.-]/g, '-');
   }
 
   protected async getRootGitFolder(): Promise<string> {
@@ -75,7 +76,7 @@ export default class BaseWorkTreeCommand extends BaseCommand {
 
     const lumbermillRoot = path.normalize(path.join(gitRoot, '../../'));
 
-    if (!await pathExists(lumbermillRoot)) {
+    if (!(await pathExists(lumbermillRoot))) {
       this.error('Something has gone wrong. Lumbermill root does not exist.');
     }
 

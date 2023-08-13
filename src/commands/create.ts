@@ -1,6 +1,7 @@
 import { Args, ux } from '@oclif/core';
 import BaseWorkTreeCommand from '../base-worktree-command';
 import * as path from 'node:path';
+import { getSafeFolderName } from '../lib/fs';
 
 export default class Create extends BaseWorkTreeCommand {
   static description = 'Creates a new worktree for a lumbermill managed repo';
@@ -22,7 +23,7 @@ export default class Create extends BaseWorkTreeCommand {
     const repo = await this.getRepoFolder();
     const config = await this.getRepoConfig();
     const defaultBranch = config.defaultBranch ?? 'main';
-    const folder = this.getSafeFolderName(args.branch);
+    const folder = getSafeFolderName(args.branch);
 
     this.updateDefaultBranch(repo, defaultBranch);
     this.createWorktree(repo, args.branch, folder);

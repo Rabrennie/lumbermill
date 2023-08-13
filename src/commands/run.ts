@@ -2,6 +2,8 @@ import { Args, Flags } from '@oclif/core';
 import BaseWorkTreeCommand from '../base-worktree-command';
 import { spawn } from 'node:child_process';
 import * as path from 'node:path';
+import { getSafeFolderName, pathExists } from '../lib/fs';
+import * as fs from 'node:fs';
 
 export default class Run extends BaseWorkTreeCommand {
   static description = 'Runs a script in a worktree';
@@ -22,15 +24,21 @@ export default class Run extends BaseWorkTreeCommand {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Run);
 
+    const scriptsFolder = await this.getScriptsFolder();
+    const folder = getSafeFolderName(flags.branch);
     const repo = await this.getRepoFolder();
-    const folder = this.getSafeFolderName(flags.branch);
-    const config = await this.getRepoConfig();
 
-    if (!config.scripts[args.script]) {
-      this.error(`Script ${args.script} not found in config`);
+    const scriptPath = path.join(scriptsFolder, args.script);
+
+    if (!await pathExists(scriptPath)) {
+      this.error('Script does not exist.');
     }
 
-    const scriptString = config.scripts[args.script];
+    const scriptString = (await fs.promises.readFile(scriptPath))?.toString();
+
+    if (!scriptString) {
+      this.error('Failed to read script.');
+    }
 
     await new Promise((resolve) => {
       // get shell from env

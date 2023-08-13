@@ -10,3 +10,7 @@ export async function pathExists(path: string): Promise<boolean> {
     .then(() => true)
     .catch(() => false);
 }
+
+export function getSafeFolderName(name: string): string {
+  return name.replace(/[^\w.-]/g, '-').toLowerCase();
+}

@@ -50,6 +50,7 @@ export default class Clone extends BaseCommand {
 
     const dotLumbermillDir = path.join(targetDir, '.lumbermill');
     await fs.promises.mkdir(dotLumbermillDir, { recursive: true });
+    await fs.promises.mkdir(path.join(dotLumbermillDir, 'scripts'), { recursive: true });
     await fs.promises.writeFile(
       path.join(dotLumbermillDir, 'config.json'),
       JSON.stringify(
@@ -57,7 +58,6 @@ export default class Clone extends BaseCommand {
           repo: args.repo,
           directory: targetDir,
           defaultBranch: 'main',
-          scripts: {},
         },
         null,
         2,
