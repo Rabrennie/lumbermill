@@ -1,4 +1,4 @@
-import { Flags } from '@oclif/core';
+import { Flags, ux } from '@oclif/core';
 import BaseCommand from './base-command';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -82,4 +82,24 @@ export default class BaseWorkTreeCommand extends BaseCommand {
 
     return normalizePath(lumbermillRoot);
   }
+
+  protected updateDefaultBranch = async (
+    repo: string,
+    defaultBranch: string,
+  ): Promise<void> => {
+    ux.action.start(`Updating ${defaultBranch} from remote`);
+    try {
+      const output = await this.runGitCommand(['pull'], {
+        cwd: path.join(repo, defaultBranch),
+      });
+      if (output.includes('fatal')) {
+        throw new Error(output);
+      }
+    } catch {
+      ux.action.stop('Failed to pull from remote.');
+      this.error('Failed to pull from remote.');
+    } finally {
+      ux.action.stop();
+    }
+  };
 }

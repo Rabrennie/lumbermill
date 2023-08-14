@@ -2,8 +2,8 @@ import { Args, ux } from '@oclif/core';
 import BaseWorkTreeCommand from '../base-worktree-command';
 import { getSafeFolderName } from '../lib/fs';
 
-export default class Create extends BaseWorkTreeCommand {
-  static description = 'Creates a new worktree for a lumbermill managed repo';
+export default class Pull extends BaseWorkTreeCommand {
+  static description = 'Pulls a remote branch into a worktree';
 
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
@@ -11,13 +11,13 @@ export default class Create extends BaseWorkTreeCommand {
 
   static args = {
     branch: Args.string({
-      description: 'branch name to create',
+      description: 'branch name to pull',
       required: true,
     }),
   };
 
   public async run(): Promise<void> {
-    const { args } = await this.parse(Create);
+    const { args } = await this.parse(Pull);
 
     const repo = await this.getRepoFolder();
     const config = await this.getRepoConfig();
@@ -25,28 +25,26 @@ export default class Create extends BaseWorkTreeCommand {
     const folder = getSafeFolderName(args.branch);
 
     await this.updateDefaultBranch(repo, defaultBranch);
-    await this.createWorktree(repo, args.branch, folder);
-
-    this.log(`Created worktree for ${args.branch} in ${repo}/${folder}`);
+    await this.pullBranch(repo, args.branch, folder);
   }
 
-  private createWorktree = async (
+  private pullBranch = async (
     repo: string,
     branch: string,
     folder: string,
   ): Promise<void> => {
-    ux.action.start('Creating worktree');
+    ux.action.start('Pulling branch');
     try {
       const output = await this.runGitCommand(
-        ['worktree', 'add', '--no-track', '-b', branch, folder],
+        ['worktree', 'add', folder, branch],
         { cwd: repo },
       );
-      if (output.includes('already exists')) {
+      if (output.includes('fatal')) {
         throw new Error(output);
       }
-    } catch {
-      ux.action.stop('Branch already exists.');
-      this.error('Failed to create worktree: Branch already exists.');
+    } catch (error: any) {
+      ux.action.stop('something went wrong');
+      this.error(error.toString());
     } finally {
       ux.action.stop();
     }
