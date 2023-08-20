@@ -80,6 +80,7 @@ I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 * [`lm alias set ALIAS EXPANSION`](#lm-alias-set-alias-expansion)
 * [`lm clone REPO [DIRECTORY]`](#lm-clone-repo-directory)
 * [`lm create BRANCH`](#lm-create-branch)
+* [`lm pull BRANCH`](#lm-pull-branch)
 * [`lm remove BRANCH`](#lm-remove-branch)
 * [`lm rm BRANCH`](#lm-rm-branch)
 * [`lm run SCRIPT`](#lm-run-script)
@@ -185,6 +186,29 @@ EXAMPLES
 ```
 
 _See code: [dist/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/create.ts)_
+
+## `lm pull BRANCH`
+
+Pulls a remote branch into a worktree
+
+```
+USAGE
+  $ lm pull BRANCH [--repo <value>]
+
+ARGUMENTS
+  BRANCH  branch name to pull
+
+FLAGS
+  --repo=<value>  repo to use, if not specified, will use repo associated with the current directory
+
+DESCRIPTION
+  Pulls a remote branch into a worktree
+
+EXAMPLES
+  $ lm pull
+```
+
+_See code: [dist/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/pull.ts)_
 
 ## `lm remove BRANCH`
 
