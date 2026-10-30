@@ -230,19 +230,22 @@ Creates a new worktree for a lumbermill managed repo
 
 ```
 USAGE
-  $ lm create BRANCH [--repo <value>]
+  $ lm create BRANCH [--repo <value>] [--from <value>]
 
 ARGUMENTS
   BRANCH  branch name to create
 
 FLAGS
+  --from=<value>  branch to base the new branch on, if not specified, will use the default branch after pulling it
   --repo=<value>  repo to use, if not specified, will use repo associated with the current directory
 
 DESCRIPTION
   Creates a new worktree for a lumbermill managed repo
 
 EXAMPLES
-  $ lm create
+  $ lm create user/ticket-123/testing
+
+  $ lm create user/ticket-123/follow-up --from user/ticket-123/testing
 ```
 
 _See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/create.ts)_

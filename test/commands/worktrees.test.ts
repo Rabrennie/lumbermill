@@ -24,6 +24,24 @@ describe('worktree commands', () => {
     expect(git(path.join(project, 'user-ticket-1-thing'), 'branch', '--show-current').trim()).toBe('user/ticket-1/thing');
   });
 
+  it('creates a worktree based on another branch', async () => {
+    await lm(['create', 'parent', '--repo', 'project']);
+    const parent = path.join(project, 'parent');
+    git(parent, '-c', 'user.name=test', '-c', 'user.email=test@example.com', 'commit', '--allow-empty', '-m', 'parent work');
+
+    const { error } = await lm(['create', 'child', '--repo', 'project', '--from', 'parent']);
+
+    expect(error).toBeUndefined();
+    expect(git(path.join(project, 'child'), 'rev-parse', 'HEAD')).toBe(git(parent, 'rev-parse', 'HEAD'));
+  });
+
+  it('errors when the branch to base on does not exist', async () => {
+    const { error } = await lm(['create', 'child', '--repo', 'project', '--from', 'nope']);
+
+    expect(error?.message).toBe('Branch nope does not exist.');
+    expect(fs.existsSync(path.join(project, 'child'))).toBe(false);
+  });
+
   it('fails to create a worktree for a branch that already exists', async () => {
     await lm(['create', 'existing', '--repo', 'project']);
 
