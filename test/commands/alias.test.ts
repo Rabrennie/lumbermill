@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createSandbox, destroySandbox, lm, type Sandbox } from '../helpers';
+import { cloneProject, createSandbox, destroySandbox, lm, type Sandbox } from '../helpers';
 
 describe('alias', () => {
   let sandbox: Sandbox;
@@ -32,5 +32,46 @@ describe('alias', () => {
     const { error } = await lm(['alias', 'set', 'create', 'pull']);
 
     expect(error?.message).toBe('create is already a command');
+  });
+
+  describe('running an alias', () => {
+    let project: string;
+
+    beforeEach(async () => {
+      project = await cloneProject(sandbox);
+    });
+
+    it('runs the expansion when given no arguments', async () => {
+      await lm(['alias', 'set', 'ls', '"alias list"']);
+
+      const { error, stdout } = await lm(['ls']);
+
+      expect(error).toBeUndefined();
+      expect(stdout).toContain('ls  alias list');
+    });
+
+    it('passes positional arguments through to the expansion', async () => {
+      await lm(['alias', 'set', 'mk', '"create --repo project"']);
+
+      const { error } = await lm(['mk', 'feat/x']);
+
+      expect(error).toBeUndefined();
+      expect(fs.existsSync(path.join(project, 'feat-x'))).toBe(true);
+    });
+
+    it('passes positional arguments and flags through to the expansion', async () => {
+      await lm(['alias', 'set', 'mk', 'create']);
+
+      const { error } = await lm(['mk', 'feat/y', '--repo', 'project']);
+
+      expect(error).toBeUndefined();
+      expect(fs.existsSync(path.join(project, 'feat-y'))).toBe(true);
+    });
+
+    it('errors with just the alias name when it is unknown', async () => {
+      const { error } = await lm(['nope', 'feat/z']);
+
+      expect(error?.message).toBe('Alias nope not found.');
+    });
   });
 });
