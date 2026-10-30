@@ -9,6 +9,7 @@ Ezpz management of git worktrees
 * [Usage](#usage)
 * [Config Files](#config-files)
 * [Repo Config](#repo-config)
+* [APFS clone: shares disk blocks with the default branch's copy until files change](#apfs-clone-shares-disk-blocks-with-the-default-branchs-copy-until-files-change)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
@@ -162,7 +163,7 @@ EXAMPLES
   $ lm alias delete
 ```
 
-_See code: [src/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/delete.ts)_
+_See code: [src/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/alias/delete.ts)_
 
 ## `lm alias list`
 
@@ -179,7 +180,7 @@ EXAMPLES
   $ lm alias list
 ```
 
-_See code: [src/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/list.ts)_
+_See code: [src/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/alias/list.ts)_
 
 ## `lm alias set ALIAS EXPANSION`
 
@@ -200,7 +201,7 @@ EXAMPLES
   $ lm alias set
 ```
 
-_See code: [src/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/set.ts)_
+_See code: [src/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/alias/set.ts)_
 
 ## `lm clone REPO [DIRECTORY]`
 
@@ -221,7 +222,7 @@ EXAMPLES
   $ lm clone
 ```
 
-_See code: [src/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/clone.ts)_
+_See code: [src/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/clone.ts)_
 
 ## `lm create BRANCH`
 
@@ -244,7 +245,7 @@ EXAMPLES
   $ lm create
 ```
 
-_See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/create.ts)_
 
 ## `lm pull BRANCH`
 
@@ -267,7 +268,7 @@ EXAMPLES
   $ lm pull
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/pull.ts)_
 
 ## `lm remove BRANCH`
 
@@ -293,7 +294,7 @@ EXAMPLES
   $ lm remove
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/remove.ts)_
 
 ## `lm rm BRANCH`
 
@@ -341,5 +342,5 @@ EXAMPLES
   $ lm run
 ```
 
-_See code: [src/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.4/src/commands/run.ts)_
 <!-- commandsstop -->
