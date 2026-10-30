@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cloneProject, createSandbox, destroySandbox, lm, type Sandbox } from '../helpers';
+import { cloneProject, createSandbox, destroySandbox, git, lm, type Sandbox } from '../helpers';
 
 describe('run', () => {
   let sandbox: Sandbox;
@@ -94,33 +94,74 @@ describe('run', () => {
     expect(error?.message).toBe('Worktree does not exist.');
   });
 
-  describe('without --repo', () => {
-    const runFrom = async (cwd: string) => {
-      const previous = process.cwd();
-      process.chdir(cwd);
-      try {
-        return await lm(['run', 'where', '--branch', 'user/scripted']);
-      } finally {
-        process.chdir(previous);
-      }
-    };
+  const runFrom = async (cwd: string, args: string[]) => {
+    const previous = process.cwd();
+    process.chdir(cwd);
+    try {
+      return await lm(args);
+    } finally {
+      process.chdir(previous);
+    }
+  };
 
+  describe('without --repo', () => {
     beforeEach(() => {
       writeScript('where', 'pwd > out.txt');
     });
 
     it('detects the repo from the default branch folder', async () => {
-      const { error } = await runFrom(path.join(project, 'main'));
+      const { error } = await runFrom(path.join(project, 'main'), ['run', 'where', '--branch', 'user/scripted']);
 
       expect(error).toBeUndefined();
       expect(readOutput()).toBe(worktree);
     });
 
     it('detects the repo from another worktree', async () => {
-      const { error } = await runFrom(worktree);
+      const { error } = await runFrom(worktree, ['run', 'where', '--branch', 'user/scripted']);
 
       expect(error).toBeUndefined();
       expect(readOutput()).toBe(worktree);
+    });
+  });
+
+  describe('without --branch', () => {
+    const readContext = () => fs.readFileSync(path.join(project, 'context.txt'), 'utf8').trim().split('\n');
+
+    beforeEach(() => {
+      writeScript('context', 'printf "%s\\n" "$LM_WORKTREE_DIR" "$LM_FOLDER" "$LM_BRANCH" > "$LM_ROOT/context.txt"');
+    });
+
+    it('uses the worktree it is run from', async () => {
+      const { error } = await runFrom(worktree, ['run', 'context']);
+
+      expect(error).toBeUndefined();
+      expect(readContext()).toEqual([worktree, 'user-scripted', 'user/scripted']);
+    });
+
+    it('uses the worktree when run from a subdirectory of it', async () => {
+      const subdirectory = path.join(worktree, 'nested', 'deeper');
+      fs.mkdirSync(subdirectory, { recursive: true });
+
+      const { error } = await runFrom(subdirectory, ['run', 'context']);
+
+      expect(error).toBeUndefined();
+      expect(readContext()).toEqual([worktree, 'user-scripted', 'user/scripted']);
+    });
+
+    it('uses the folder, not the branch name, when they differ', async () => {
+      const main = path.join(project, 'main');
+      git(main, 'checkout', '-b', 'feature/other');
+
+      const { error } = await runFrom(main, ['run', 'context']);
+
+      expect(error).toBeUndefined();
+      expect(readContext()).toEqual([main, 'main', 'feature/other']);
+    });
+
+    it('errors when not inside a worktree', async () => {
+      const { error } = await runFrom(project, ['run', 'context']);
+
+      expect(error?.message).toBe('Not inside a worktree. Pass --branch or run from a worktree.');
     });
   });
 });

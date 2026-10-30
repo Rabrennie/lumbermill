@@ -11,8 +11,7 @@ export default class Run extends BaseWorkTreeCommand {
 
   static flags = {
     branch: Flags.string({
-      description: 'branch name to run script in',
-      required: true,
+      description: 'branch name to run script in, if not specified, will use the current worktree',
     }),
   };
 
@@ -24,7 +23,9 @@ export default class Run extends BaseWorkTreeCommand {
     const { args, flags } = await this.parse(Run);
 
     const scriptsFolder = await this.getScriptsFolder();
-    const context = await this.getScriptContext(flags.branch);
+    const context = flags.branch
+      ? await this.getScriptContext(flags.branch)
+      : await this.getCurrentWorktreeContext();
 
     const scriptPath = path.join(scriptsFolder, args.script);
 

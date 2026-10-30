@@ -71,7 +71,13 @@ I am running in /Users/rab/development/lumbermill/main
 
 $ lm run my-cool-script --repo lumbermill --branch user/ticket-123/testing
 I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
+
+$ cd /Users/rab/development/lumbermill/user-ticket-123-testing/src
+$ lm run my-cool-script
+I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 ```
+
+Without `--branch`, scripts run in the worktree you're currently in.
 
 Executable scripts run directly, so their shebang picks the interpreter. Other scripts run with `$SHELL`, or `sh` if
 it isn't set. `lm run` exits with the script's exit code.

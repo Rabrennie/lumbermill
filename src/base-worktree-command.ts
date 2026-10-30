@@ -60,10 +60,12 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     return JSON.parse(repoConfig.toString());
   }
 
-  protected async getScriptContext(branch: string): Promise<ScriptContext> {
+  protected async getScriptContext(
+    branch: string,
+    folder = getSafeFolderName(branch),
+  ): Promise<ScriptContext> {
     const repo = await this.getRepoFolder();
     const config = await this.getRepoConfig();
-    const folder = getSafeFolderName(branch);
 
     return {
       root: repo,
@@ -72,6 +74,31 @@ export default class BaseWorkTreeCommand extends BaseCommand {
       branch,
       folder,
     };
+  }
+
+  protected async getCurrentWorktreeContext(): Promise<ScriptContext> {
+    const repo = await this.getRepoFolder();
+
+    let toplevel;
+    try {
+      toplevel = (await this.runGitCommand(['rev-parse', '--show-toplevel'])).trim();
+    } catch {
+      this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+    }
+
+    const [repoPath, worktreeParent] = await Promise.all([
+      fs.promises.realpath(repo),
+      fs.promises.realpath(path.dirname(toplevel)),
+    ]);
+
+    if (worktreeParent !== repoPath) {
+      this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+    }
+
+    const folder = path.basename(toplevel);
+    const branch = (await this.runGitCommand(['branch', '--show-current'])).trim();
+
+    return this.getScriptContext(branch || folder, folder);
   }
 
   protected async runHook(hook: string, context: ScriptContext): Promise<void> {
