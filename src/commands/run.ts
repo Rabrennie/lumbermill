@@ -1,9 +1,8 @@
 import { Args, Flags } from '@oclif/core';
 import BaseWorkTreeCommand from '../base-worktree-command';
-import { spawn } from 'node:child_process';
 import * as path from 'node:path';
 import { getSafeFolderName, pathExists } from '../lib/fs';
-import * as fs from 'node:fs';
+import { runScript } from '../lib/scripts';
 
 export default class Run extends BaseWorkTreeCommand {
   static description = 'Runs a script in a worktree';
@@ -27,6 +26,7 @@ export default class Run extends BaseWorkTreeCommand {
     const scriptsFolder = await this.getScriptsFolder();
     const folder = getSafeFolderName(flags.branch);
     const repo = await this.getRepoFolder();
+    const config = await this.getRepoConfig();
 
     const scriptPath = path.join(scriptsFolder, args.script);
 
@@ -34,24 +34,27 @@ export default class Run extends BaseWorkTreeCommand {
       this.error('Script does not exist.');
     }
 
-    const scriptString = (await fs.promises.readFile(scriptPath))?.toString();
+    const worktreeDir = path.join(repo, folder);
 
-    if (!scriptString) {
-      this.error('Failed to read script.');
+    if (!await pathExists(worktreeDir)) {
+      this.error('Worktree does not exist.');
     }
 
-    await new Promise((resolve) => {
-      // get shell from env
-      const shell = process.env.SHELL ?? '/usr/bin/env bash';
+    let code: number;
+    try {
+      code = await runScript(scriptPath, {
+        root: repo,
+        mainDir: path.join(repo, config.defaultBranch ?? 'main'),
+        worktreeDir,
+        branch: flags.branch,
+        folder,
+      });
+    } catch {
+      this.error('Failed to run script.');
+    }
 
-      const script = spawn(shell, ['-c', scriptString], {
-        cwd: path.join(repo, folder),
-        stdio: 'inherit',
-      });
-      script.on('close', resolve);
-      script.on('error', () => {
-        this.error('Failed to run script.');
-      });
-    });
+    if (code !== 0) {
+      this.exit(code);
+    }
   }
 }

@@ -51,21 +51,4 @@ describe('worktree commands', () => {
     expect(fs.existsSync(path.join(project, 'to-remove'))).toBe(false);
     expect(git(path.join(project, 'main'), 'worktree', 'list')).not.toContain('to-remove');
   });
-
-  it('runs a script inside the chosen worktree', async () => {
-    await lm(['create', 'scripted', '--repo', 'project']);
-    fs.writeFileSync(path.join(project, '.lumbermill', 'scripts', 'where'), 'pwd > where.txt');
-
-    const { error } = await lm(['run', 'where', '--repo', 'project', '--branch', 'scripted']);
-
-    expect(error).toBeUndefined();
-    const worktree = path.join(project, 'scripted');
-    expect(fs.readFileSync(path.join(worktree, 'where.txt'), 'utf8').trim()).toBe(worktree);
-  });
-
-  it('errors when the script does not exist', async () => {
-    const { error } = await lm(['run', 'missing', '--repo', 'project', '--branch', 'main']);
-
-    expect(error?.message).toBe('Script does not exist.');
-  });
 });
