@@ -1,3 +1,3 @@
 @echo off
 
-node "%~dp0\dev" %*
+node --require tsx/cjs "%~dp0\dev" %*

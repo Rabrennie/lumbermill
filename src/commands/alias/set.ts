@@ -33,7 +33,7 @@ export default class AliasSet extends BaseCommand {
     }
 
     userConfig.aliases[args.alias] = args.expansion;
-    updateUserConfig(this.config.configDir, userConfig);
+    await updateUserConfig(this.config.configDir, userConfig);
 
     ux.action.stop();
   }

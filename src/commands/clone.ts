@@ -95,9 +95,9 @@ export default class Clone extends BaseCommand {
     );
 
     userConfig.repos[repoName] = targetDir;
-    updateUserConfig(this.config.configDir, userConfig);
+    await updateUserConfig(this.config.configDir, userConfig);
 
     ux.action.stop();
-    ux.info(`Cloned ${args.repo} to ${targetDir}`);
+    this.log(`Cloned ${args.repo} to ${targetDir}`);
   }
 }

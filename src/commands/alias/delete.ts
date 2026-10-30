@@ -24,7 +24,7 @@ export default class AliasDelete extends Command {
     }
 
     delete userConfig.aliases[args.alias];
-    updateUserConfig(this.config.configDir, userConfig);
+    await updateUserConfig(this.config.configDir, userConfig);
 
     ux.action.stop();
   }

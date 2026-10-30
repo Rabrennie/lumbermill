@@ -1,4 +1,4 @@
-import { Command, ux } from '@oclif/core';
+import { Command } from '@oclif/core';
 import { getUserConfig } from '../../lib/config';
 
 export default class AliasList extends Command {
@@ -11,22 +11,20 @@ export default class AliasList extends Command {
   static args = {};
 
   public async run(): Promise<void> {
+    await this.parse(AliasList);
+
     const userConfig = await getUserConfig(this.config.configDir);
     const aliases = userConfig.aliases ?? {};
 
-    ux.table(
-      Object.entries(aliases).map(([alias, expansion]) => ({
-        alias,
-        expansion,
-      })),
-      {
-        alias: {
-          minWidth: 10,
-        },
-        expansion: {
-          minWidth: 10,
-        },
-      },
-    );
+    const entries = Object.entries(aliases);
+    if (entries.length === 0) {
+      this.log('No aliases defined.');
+      return;
+    }
+
+    const width = Math.max(...entries.map(([alias]) => alias.length));
+    for (const [alias, expansion] of entries) {
+      this.log(`${alias.padEnd(width)}  ${expansion}`);
+    }
   }
 }
