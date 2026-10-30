@@ -16,15 +16,15 @@ export default class BaseCommand extends Command {
         cwd: options.cwd ?? process.cwd(),
       });
 
-      child.stdout.on('data', (data: any) => {
+      child.stdout.on('data', (data: Buffer) => {
         output += data.toString();
       });
 
-      child.stderr.on('data', (data: any) => {
+      child.stderr.on('data', (data: Buffer) => {
         output += data.toString();
       });
 
-      child.on('close', (code: any) => {
+      child.on('close', (code: number | null) => {
         if (code === 0) {
           resolve(output);
         } else {
@@ -32,7 +32,7 @@ export default class BaseCommand extends Command {
         }
       });
 
-      child.on('error', (error: any) => {
+      child.on('error', (error: Error) => {
         output += error.toString();
         reject(output);
       });

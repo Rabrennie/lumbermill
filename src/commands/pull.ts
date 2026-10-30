@@ -42,9 +42,9 @@ export default class Pull extends BaseWorkTreeCommand {
       if (output.includes('fatal')) {
         throw new Error(output);
       }
-    } catch (error: any) {
+    } catch (error) {
       ux.action.stop('something went wrong');
-      this.error(error.toString());
+      this.error(String(error));
     } finally {
       ux.action.stop();
     }

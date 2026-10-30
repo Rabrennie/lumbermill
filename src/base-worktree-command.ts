@@ -29,7 +29,7 @@ export default class BaseWorkTreeCommand extends BaseCommand {
 
     if (!flags.repo) {
       const repoFolder = await this.getRootGitFolder();
-      repo = Object.entries(userConfig.repos).find(([_, value]) => {
+      repo = Object.entries(userConfig.repos).find(([, value]) => {
         return value === repoFolder;
       })?.[0];
     }

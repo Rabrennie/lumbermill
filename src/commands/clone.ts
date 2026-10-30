@@ -73,8 +73,8 @@ export default class Clone extends BaseCommand {
         'HEAD',
       ]);
       branchName = output.split('refs/heads/')[1].split(/\s/)[0];
-    } catch (error: any) {
-      this.error(error.toString());
+    } catch (error) {
+      this.error(String(error));
     }
 
     try {
@@ -85,8 +85,8 @@ export default class Clone extends BaseCommand {
         },
       );
       this.log(output);
-    } catch (error: any) {
-      this.error(error.toString());
+    } catch (error) {
+      this.error(String(error));
     }
 
     await fs.promises.writeFile(
