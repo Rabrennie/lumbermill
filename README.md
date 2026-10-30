@@ -130,7 +130,7 @@ EXAMPLES
   $ lm alias delete
 ```
 
-_See code: [dist/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/alias/delete.ts)_
+_See code: [src/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/alias/delete.ts)_
 
 ## `lm alias list`
 
@@ -147,7 +147,7 @@ EXAMPLES
   $ lm alias list
 ```
 
-_See code: [dist/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/alias/list.ts)_
+_See code: [src/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/alias/list.ts)_
 
 ## `lm alias set ALIAS EXPANSION`
 
@@ -168,7 +168,7 @@ EXAMPLES
   $ lm alias set
 ```
 
-_See code: [dist/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/alias/set.ts)_
+_See code: [src/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/alias/set.ts)_
 
 ## `lm clone REPO [DIRECTORY]`
 
@@ -179,8 +179,8 @@ USAGE
   $ lm clone REPO [DIRECTORY]
 
 ARGUMENTS
-  REPO       repo to clone
-  DIRECTORY  target directory
+  REPO         repo to clone
+  [DIRECTORY]  target directory
 
 DESCRIPTION
   Clones a repo and configures it for lumbermill
@@ -189,7 +189,7 @@ EXAMPLES
   $ lm clone
 ```
 
-_See code: [dist/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/clone.ts)_
+_See code: [src/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/clone.ts)_
 
 ## `lm create BRANCH`
 
@@ -212,7 +212,7 @@ EXAMPLES
   $ lm create
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/create.ts)_
 
 ## `lm pull BRANCH`
 
@@ -235,7 +235,7 @@ EXAMPLES
   $ lm pull
 ```
 
-_See code: [dist/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/pull.ts)_
 
 ## `lm remove BRANCH`
 
@@ -261,7 +261,7 @@ EXAMPLES
   $ lm remove
 ```
 
-_See code: [dist/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/remove.ts)_
 
 ## `lm rm BRANCH`
 
@@ -309,5 +309,5 @@ EXAMPLES
   $ lm run
 ```
 
-_See code: [dist/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.3.0/dist/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.0/src/commands/run.ts)_
 <!-- commandsstop -->
