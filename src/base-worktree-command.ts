@@ -99,8 +99,8 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     try {
       gitCommonDir = await this.runGitCommand([
         'rev-parse',
-        '--git-common-dir',
         '--path-format=absolute',
+        '--git-common-dir',
       ]);
     } catch {
       this.error('Not in a git repo.');

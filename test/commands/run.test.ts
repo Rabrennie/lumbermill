@@ -93,4 +93,34 @@ describe('run', () => {
 
     expect(error?.message).toBe('Worktree does not exist.');
   });
+
+  describe('without --repo', () => {
+    const runFrom = async (cwd: string) => {
+      const previous = process.cwd();
+      process.chdir(cwd);
+      try {
+        return await lm(['run', 'where', '--branch', 'user/scripted']);
+      } finally {
+        process.chdir(previous);
+      }
+    };
+
+    beforeEach(() => {
+      writeScript('where', 'pwd > out.txt');
+    });
+
+    it('detects the repo from the default branch folder', async () => {
+      const { error } = await runFrom(path.join(project, 'main'));
+
+      expect(error).toBeUndefined();
+      expect(readOutput()).toBe(worktree);
+    });
+
+    it('detects the repo from another worktree', async () => {
+      const { error } = await runFrom(worktree);
+
+      expect(error).toBeUndefined();
+      expect(readOutput()).toBe(worktree);
+    });
+  });
 });
