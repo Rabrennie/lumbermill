@@ -136,7 +136,7 @@ EXAMPLES
   $ lm alias delete
 ```
 
-_See code: [src/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/alias/delete.ts)_
+_See code: [src/commands/alias/delete.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/delete.ts)_
 
 ## `lm alias list`
 
@@ -153,7 +153,7 @@ EXAMPLES
   $ lm alias list
 ```
 
-_See code: [src/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/alias/list.ts)_
+_See code: [src/commands/alias/list.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/list.ts)_
 
 ## `lm alias set ALIAS EXPANSION`
 
@@ -174,7 +174,7 @@ EXAMPLES
   $ lm alias set
 ```
 
-_See code: [src/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/alias/set.ts)_
+_See code: [src/commands/alias/set.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/alias/set.ts)_
 
 ## `lm clone REPO [DIRECTORY]`
 
@@ -195,7 +195,7 @@ EXAMPLES
   $ lm clone
 ```
 
-_See code: [src/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/clone.ts)_
+_See code: [src/commands/clone.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/clone.ts)_
 
 ## `lm create BRANCH`
 
@@ -218,7 +218,7 @@ EXAMPLES
   $ lm create
 ```
 
-_See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/create.ts)_
 
 ## `lm pull BRANCH`
 
@@ -241,7 +241,7 @@ EXAMPLES
   $ lm pull
 ```
 
-_See code: [src/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/pull.ts)_
+_See code: [src/commands/pull.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/pull.ts)_
 
 ## `lm remove BRANCH`
 
@@ -267,7 +267,7 @@ EXAMPLES
   $ lm remove
 ```
 
-_See code: [src/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/remove.ts)_
+_See code: [src/commands/remove.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/remove.ts)_
 
 ## `lm rm BRANCH`
 
@@ -299,13 +299,13 @@ Runs a script in a worktree
 
 ```
 USAGE
-  $ lm run SCRIPT --branch <value> [--repo <value>]
+  $ lm run SCRIPT [--repo <value>] [--branch <value>]
 
 ARGUMENTS
   SCRIPT  file to read
 
 FLAGS
-  --branch=<value>  (required) branch name to run script in
+  --branch=<value>  branch name to run script in, if not specified, will use the current worktree
   --repo=<value>    repo to use, if not specified, will use repo associated with the current directory
 
 DESCRIPTION
@@ -315,5 +315,5 @@ EXAMPLES
   $ lm run
 ```
 
-_See code: [src/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.2/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/rabrennie/lumbermill/blob/v0.4.3/src/commands/run.ts)_
 <!-- commandsstop -->
