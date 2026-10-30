@@ -26,6 +26,7 @@ export default class Pull extends BaseWorkTreeCommand {
 
     await this.updateDefaultBranch(repo, defaultBranch);
     await this.pullBranch(repo, args.branch, folder);
+    await this.runHook('post-create', await this.getScriptContext(args.branch));
   }
 
   private pullBranch = async (

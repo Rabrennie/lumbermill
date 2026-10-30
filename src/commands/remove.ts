@@ -1,7 +1,6 @@
 import { Args, ux } from '@oclif/core';
-import { spawn } from 'node:child_process';
 import BaseWorkTreeCommand from '../base-worktree-command';
-import { getSafeFolderName } from '../lib/fs';
+import { pathExists } from '../lib/fs';
 
 export default class Remove extends BaseWorkTreeCommand {
   static description = 'Removes a worktree from a lumbermill managed repo';
@@ -20,23 +19,18 @@ export default class Remove extends BaseWorkTreeCommand {
   public async run(): Promise<void> {
     const { args } = await this.parse(Remove);
 
-    const repo = await this.getRepoFolder();
+    const context = await this.getScriptContext(args.branch);
 
-    const folder = getSafeFolderName(args.branch);
+    if (!(await pathExists(context.worktreeDir))) {
+      this.error('Worktree does not exist.');
+    }
+
+    await this.runHook('pre-remove', context);
 
     ux.action.start(`Removing worktree ${args.branch}`);
-    await new Promise((resolve) => {
-      const rm = spawn('rm', ['-rf', `${repo}/${folder}`]);
-      rm.on('close', resolve);
-      rm.on('error', () => {
-        ux.action.stop('Failed to remove worktree.');
-        this.error('Failed to remove worktree.');
-      });
-    });
-
     try {
-      await this.runGitCommand(['worktree', 'prune'], {
-        cwd: repo,
+      await this.runGitCommand(['worktree', 'remove', '--force', context.folder], {
+        cwd: context.root,
       });
     } catch {
       ux.action.stop('Failed to remove worktree.');

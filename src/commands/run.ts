@@ -1,7 +1,7 @@
 import { Args, Flags } from '@oclif/core';
 import BaseWorkTreeCommand from '../base-worktree-command';
 import * as path from 'node:path';
-import { getSafeFolderName, pathExists } from '../lib/fs';
+import { pathExists } from '../lib/fs';
 import { runScript } from '../lib/scripts';
 
 export default class Run extends BaseWorkTreeCommand {
@@ -24,9 +24,7 @@ export default class Run extends BaseWorkTreeCommand {
     const { args, flags } = await this.parse(Run);
 
     const scriptsFolder = await this.getScriptsFolder();
-    const folder = getSafeFolderName(flags.branch);
-    const repo = await this.getRepoFolder();
-    const config = await this.getRepoConfig();
+    const context = await this.getScriptContext(flags.branch);
 
     const scriptPath = path.join(scriptsFolder, args.script);
 
@@ -34,21 +32,13 @@ export default class Run extends BaseWorkTreeCommand {
       this.error('Script does not exist.');
     }
 
-    const worktreeDir = path.join(repo, folder);
-
-    if (!await pathExists(worktreeDir)) {
+    if (!await pathExists(context.worktreeDir)) {
       this.error('Worktree does not exist.');
     }
 
     let code: number;
     try {
-      code = await runScript(scriptPath, {
-        root: repo,
-        mainDir: path.join(repo, config.defaultBranch ?? 'main'),
-        worktreeDir,
-        branch: flags.branch,
-        folder,
-      });
+      code = await runScript(scriptPath, context);
     } catch {
       this.error('Failed to run script.');
     }

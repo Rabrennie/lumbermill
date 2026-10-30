@@ -28,6 +28,8 @@ export default class Create extends BaseWorkTreeCommand {
     await this.createWorktree(repo, args.branch, folder);
 
     this.log(`Created worktree for ${args.branch} in ${repo}/${folder}`);
+
+    await this.runHook('post-create', await this.getScriptContext(args.branch));
   }
 
   private createWorktree = async (

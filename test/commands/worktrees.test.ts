@@ -51,4 +51,20 @@ describe('worktree commands', () => {
     expect(fs.existsSync(path.join(project, 'to-remove'))).toBe(false);
     expect(git(path.join(project, 'main'), 'worktree', 'list')).not.toContain('to-remove');
   });
+
+  it('removes a worktree with uncommitted changes', async () => {
+    await lm(['create', 'dirty', '--repo', 'project']);
+    fs.writeFileSync(path.join(project, 'dirty', 'untracked.txt'), 'wip');
+
+    const { error } = await lm(['rm', 'dirty', '--repo', 'project']);
+
+    expect(error).toBeUndefined();
+    expect(fs.existsSync(path.join(project, 'dirty'))).toBe(false);
+  });
+
+  it('errors when removing a worktree that does not exist', async () => {
+    const { error } = await lm(['rm', 'nope', '--repo', 'project']);
+
+    expect(error?.message).toBe('Worktree does not exist.');
+  });
 });

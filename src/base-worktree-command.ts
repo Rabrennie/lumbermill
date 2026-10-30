@@ -2,8 +2,9 @@ import { Flags, ux } from '@oclif/core';
 import BaseCommand from './base-command';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { normalizePath, pathExists } from './lib/fs';
+import { getSafeFolderName, normalizePath, pathExists } from './lib/fs';
 import { getUserConfig } from './lib/config';
+import { runScript, ScriptContext } from './lib/scripts';
 
 interface RepoConfig {
   repo: string;
@@ -57,6 +58,39 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     );
 
     return JSON.parse(repoConfig.toString());
+  }
+
+  protected async getScriptContext(branch: string): Promise<ScriptContext> {
+    const repo = await this.getRepoFolder();
+    const config = await this.getRepoConfig();
+    const folder = getSafeFolderName(branch);
+
+    return {
+      root: repo,
+      mainDir: path.join(repo, config.defaultBranch ?? 'main'),
+      worktreeDir: path.join(repo, folder),
+      branch,
+      folder,
+    };
+  }
+
+  protected async runHook(hook: string, context: ScriptContext): Promise<void> {
+    const hookPath = path.join(await this.getScriptsFolder(), 'hooks', hook);
+
+    if (!(await pathExists(hookPath))) {
+      return;
+    }
+
+    let code: number;
+    try {
+      code = await runScript(hookPath, context);
+    } catch {
+      this.error(`Failed to run ${hook} hook.`);
+    }
+
+    if (code !== 0) {
+      this.error(`${hook} hook failed with exit code ${code}.`, { exit: code });
+    }
   }
 
   protected async getRootGitFolder(): Promise<string> {

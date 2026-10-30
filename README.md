@@ -73,6 +73,33 @@ $ lm run my-cool-script --repo lumbermill --branch user/ticket-123/testing
 I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 ```
 
+Executable scripts run directly, so their shebang picks the interpreter. Other scripts run with `$SHELL`, or `sh` if
+it isn't set. `lm run` exits with the script's exit code.
+
+Scripts run inside the worktree with these environment variables set:
+
+| Variable          | Value                                 |
+| ----------------- | ------------------------------------- |
+| `LM_ROOT`         | The lumbermill repo directory         |
+| `LM_MAIN_DIR`     | The default branch's worktree         |
+| `LM_WORKTREE_DIR` | The worktree the script is running in |
+| `LM_BRANCH`       | The branch name                       |
+| `LM_FOLDER`       | The worktree's folder name            |
+
+## Hooks
+
+Scripts in `.lumbermill/scripts/hooks/` run automatically:
+
+- `post-create` runs after `lm create` and `lm pull`
+- `pre-remove` runs before `lm remove`. If it exits non-zero, the worktree is kept
+
+`.lumbermill/scripts/hooks/post-create`
+
+```bash
+#!/bin/sh
+cp -Rc "$LM_MAIN_DIR/node_modules" node_modules
+```
+
 # Commands
 <!-- commands -->
 * [`lm alias delete ALIAS`](#lm-alias-delete-alias)
