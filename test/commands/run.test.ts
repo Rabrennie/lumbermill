@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -158,10 +159,71 @@ describe('run', () => {
       expect(readContext()).toEqual([main, 'main', 'feature/other']);
     });
 
-    it('errors when not inside a worktree', async () => {
-      const { error } = await runFrom(project, ['run', 'context']);
+    describe('when not inside a worktree', () => {
+      let binDir: string;
+      let originalPath: string | undefined;
 
-      expect(error?.message).toBe('Not inside a worktree. Pass --branch or run from a worktree.');
+      const writeFzf = (contents: string) => {
+        fs.writeFileSync(path.join(binDir, 'fzf'), `#!/bin/sh\n${contents}\n`, { mode: 0o755 });
+      };
+
+      const setInteractive = (isTTY: boolean) => {
+        Object.defineProperty(process.stdin, 'isTTY', { value: isTTY, configurable: true });
+      };
+
+      beforeEach(() => {
+        binDir = path.join(sandbox.dir, 'bin');
+        fs.mkdirSync(binDir);
+        fs.symlinkSync(execFileSync('which', ['git'], { encoding: 'utf8' }).trim(), path.join(binDir, 'git'));
+        originalPath = process.env.PATH;
+        process.env.PATH = `${binDir}:/bin:/usr/bin`;
+        setInteractive(true);
+      });
+
+      afterEach(() => {
+        process.env.PATH = originalPath;
+        setInteractive(false);
+      });
+
+      it('picks a worktree with fzf', async () => {
+        writeFzf(`tee "${sandbox.dir}/fzf-input.txt" | grep '^user-scripted'`);
+
+        const { error } = await runFrom(project, ['run', 'context']);
+
+        expect(error).toBeUndefined();
+        expect(readContext()).toEqual([worktree, 'user-scripted', 'user/scripted']);
+        expect(fs.readFileSync(path.join(sandbox.dir, 'fzf-input.txt'), 'utf8').split('\n')).toEqual([
+          'main\tmain',
+          'user-scripted\tuser/scripted',
+        ]);
+      });
+
+      it('exits without running the script when fzf is cancelled', async () => {
+        writeFzf('exit 130');
+
+        const { error } = await runFrom(project, ['run', 'context']);
+
+        expect(error?.oclif?.exit).toBe(130);
+        expect(fs.existsSync(path.join(project, 'context.txt'))).toBe(false);
+      });
+
+      it('errors instead of opening fzf when not run from a terminal', async () => {
+        writeFzf(`touch "${sandbox.dir}/fzf-ran"`);
+        setInteractive(false);
+
+        const { error } = await runFrom(project, ['run', 'context']);
+
+        expect(error?.message).toBe('Not inside a worktree. Pass --branch or run from a worktree.');
+        expect(fs.existsSync(path.join(sandbox.dir, 'fzf-ran'))).toBe(false);
+      });
+
+      it('errors when fzf is not installed', async () => {
+        process.env.PATH = binDir;
+
+        const { error } = await runFrom(project, ['run', 'context']);
+
+        expect(error?.message).toBe('Not inside a worktree. Pass --branch or run from a worktree.');
+      });
     });
   });
 });

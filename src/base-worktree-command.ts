@@ -5,6 +5,7 @@ import * as path from 'node:path';
 import { getSafeFolderName, normalizePath, pathExists } from './lib/fs';
 import { getUserConfig } from './lib/config';
 import { runScript, ScriptContext } from './lib/scripts';
+import { FzfNotFoundError, pickWithFzf } from './lib/fzf';
 
 interface RepoConfig {
   repo: string;
@@ -76,14 +77,14 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     };
   }
 
-  protected async getCurrentWorktreeContext(): Promise<ScriptContext> {
+  protected async getCurrentWorktreeContext(): Promise<ScriptContext | undefined> {
     const repo = await this.getRepoFolder();
 
     let toplevel;
     try {
       toplevel = (await this.runGitCommand(['rev-parse', '--show-toplevel'])).trim();
     } catch {
-      this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+      return undefined;
     }
 
     const [repoPath, worktreeParent] = await Promise.all([
@@ -92,13 +93,65 @@ export default class BaseWorkTreeCommand extends BaseCommand {
     ]);
 
     if (worktreeParent !== repoPath) {
-      this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+      return undefined;
     }
 
     const folder = path.basename(toplevel);
     const branch = (await this.runGitCommand(['branch', '--show-current'])).trim();
 
     return this.getScriptContext(branch || folder, folder);
+  }
+
+  protected async pickWorktreeContext(): Promise<ScriptContext> {
+    if (!process.stdin.isTTY) {
+      this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+    }
+
+    const worktrees = await this.listWorktrees();
+
+    let picked;
+    try {
+      picked = await pickWithFzf(
+        worktrees.map(({ folder, branch }) => `${folder}\t${branch}`),
+        'worktree: ',
+      );
+    } catch (error) {
+      if (error instanceof FzfNotFoundError) {
+        this.error('Not inside a worktree. Pass --branch or run from a worktree.');
+      }
+
+      throw error;
+    }
+
+    if (!picked) {
+      this.exit(130);
+    }
+
+    const [folder, branch] = picked.split('\t');
+    return this.getScriptContext(branch || folder, folder);
+  }
+
+  private async listWorktrees(): Promise<{ folder: string; branch: string }[]> {
+    const repo = await this.getRepoFolder();
+    const repoPath = await fs.promises.realpath(repo);
+    const output = await this.runGitCommand(['worktree', 'list', '--porcelain'], { cwd: repo });
+
+    const worktrees = [];
+    for (const block of output.trim().split('\n\n')) {
+      const lines = block.split('\n');
+      const worktreePath = lines.find((line) => line.startsWith('worktree '))?.slice('worktree '.length);
+      const branch = lines.find((line) => line.startsWith('branch '))?.slice('branch refs/heads/'.length) ?? '';
+
+      if (!worktreePath || !(await pathExists(worktreePath))) {
+        continue;
+      }
+
+      if ((await fs.promises.realpath(path.dirname(worktreePath))) === repoPath) {
+        worktrees.push({ folder: path.basename(worktreePath), branch });
+      }
+    }
+
+    return worktrees;
   }
 
   protected async runHook(hook: string, context: ScriptContext): Promise<void> {

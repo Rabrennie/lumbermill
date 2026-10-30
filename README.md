@@ -77,7 +77,8 @@ $ lm run my-cool-script
 I am running in /Users/rab/development/lumbermill/user-ticket-123-testing
 ```
 
-Without `--branch`, scripts run in the worktree you're currently in.
+Without `--branch`, scripts run in the worktree you're currently in. If you're not in one, for example at the repo
+root, and [fzf](https://github.com/junegunn/fzf) is installed, you can pick a worktree from a list instead.
 
 Executable scripts run directly, so their shebang picks the interpreter. Other scripts run with `$SHELL`, or `sh` if
 it isn't set. `lm run` exits with the script's exit code.
@@ -96,14 +97,39 @@ Scripts run inside the worktree with these environment variables set:
 
 Scripts in `.lumbermill/scripts/hooks/` run automatically:
 
-- `post-create` runs after `lm create` and `lm pull`
-- `pre-remove` runs before `lm remove`. If it exits non-zero, the worktree is kept
+| Hook          | Runs                                | If it fails                                          |
+| ------------- | ----------------------------------- | ---------------------------------------------------- |
+| `post-create` | In the new worktree, after `lm create` and `lm pull` | The worktree is kept, so you can fix the problem and rerun the hook |
+| `pre-remove`  | In the worktree, before `lm remove` | The worktree is kept                                 |
+
+Hooks run the same way as other scripts: they get the same environment variables, and a hook that exits non-zero makes
+`lm` exit with the same code. Missing hooks are skipped.
+
+Hooks are ordinary scripts, so you can run one by hand, for example to set up a worktree that was created before the
+hook existed:
+
+```sh-session
+$ lm run hooks/post-create --branch user/ticket-123/testing
+```
 
 `.lumbermill/scripts/hooks/post-create`
 
 ```bash
 #!/bin/sh
+set -e
+
+# APFS clone: shares disk blocks with the default branch's copy until files change
 cp -Rc "$LM_MAIN_DIR/node_modules" node_modules
+cp "$LM_MAIN_DIR/.env" .env
+```
+
+`.lumbermill/scripts/hooks/pre-remove`
+
+```bash
+#!/bin/sh
+set -e
+
+docker compose -p "$LM_FOLDER" down -v
 ```
 
 # Commands

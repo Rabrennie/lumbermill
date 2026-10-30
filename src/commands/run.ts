@@ -23,15 +23,15 @@ export default class Run extends BaseWorkTreeCommand {
     const { args, flags } = await this.parse(Run);
 
     const scriptsFolder = await this.getScriptsFolder();
-    const context = flags.branch
-      ? await this.getScriptContext(flags.branch)
-      : await this.getCurrentWorktreeContext();
-
     const scriptPath = path.join(scriptsFolder, args.script);
 
     if (!await pathExists(scriptPath)) {
       this.error('Script does not exist.');
     }
+
+    const context = flags.branch
+      ? await this.getScriptContext(flags.branch)
+      : (await this.getCurrentWorktreeContext()) ?? (await this.pickWorktreeContext());
 
     if (!await pathExists(context.worktreeDir)) {
       this.error('Worktree does not exist.');
