@@ -9,7 +9,6 @@ Ezpz management of git worktrees
 * [Usage](#usage)
 * [Config Files](#config-files)
 * [Repo Config](#repo-config)
-* [APFS clone: shares disk blocks with the default branch's copy until files change](#apfs-clone-shares-disk-blocks-with-the-default-branchs-copy-until-files-change)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
@@ -119,7 +118,6 @@ $ lm run hooks/post-create --branch user/ticket-123/testing
 #!/bin/sh
 set -e
 
-# APFS clone: shares disk blocks with the default branch's copy until files change
 cp -Rc "$LM_MAIN_DIR/node_modules" node_modules
 cp "$LM_MAIN_DIR/.env" .env
 ```
